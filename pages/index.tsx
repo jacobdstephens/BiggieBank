@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { Suspense } from 'react';
 
 const DynamicModel = dynamic(() => import('../components/modelviewer'), {
-  suspense: true,
+  ssr: false,
 });
 
 export default function Home() {
@@ -25,9 +25,7 @@ export default function Home() {
             <div className="card-body">
               <h2 className="card-title">Connect your Web3 Wallet</h2>
               <p>Feed the piggy and watch him grow!</p>
-              <Suspense>
-                <DynamicModel />
-              </Suspense>
+              <DynamicModel />
               <div className="card-actions justify-end">
                 <ConnectButton />
               </div>

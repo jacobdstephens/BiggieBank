@@ -1,4 +1,4 @@
-import "@google/model-viewer";
+import "@google/model-viewer/dist/model-viewer-umd";
 
 const Model = () => (
   <div id="card">
