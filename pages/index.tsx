@@ -2,12 +2,17 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import dynamic from 'next/dynamic'
+import { useAccount } from 'wagmi';
+import useIsMounted from '../hooks/useIsMounted';
 
 const DynamicModel = dynamic(() => import('../components/modelviewer'), {
   ssr: false,
 });
 
 export default function Home() {
+  const { address } = useAccount();
+  const isMounted = useIsMounted();
+
   return (
     <>
       <Head>
@@ -22,9 +27,18 @@ export default function Home() {
         <main className={styles.main}>
           <div className="card w-96 bg-base-100 shadow-xl">
             <div className="card-body">
-              <h2 className="card-title">Connect your Web3 Wallet</h2>
-              <p>Feed the piggy and watch him grow!</p>
-              <DynamicModel />
+              {isMounted && (
+                address ? (
+                  <>
+                    <p>Feed the piggy and watch him grow!</p>
+                    <DynamicModel />
+                  </>
+                ) : (
+                  <>
+                    <h2 className="card-title">Connect your Web3 Wallet</h2>
+                  </>
+                )
+              )}
               <div className="card-actions justify-end">
                 <ConnectButton />
               </div>
