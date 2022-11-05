@@ -12,6 +12,7 @@ const Model = () => (
       auto-rotate
       ar
       ar-modes="webxr scene-viewer quick-look"
+      ar-scale="fixed"
     ></model-viewer>
   </div>
 );

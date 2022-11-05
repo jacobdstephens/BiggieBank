@@ -4,6 +4,7 @@ declare module '@google/model-viewer' {
     iosSrc?: string;
     class?: string;
     ar?: boolean;
+    ar-scale?: string;
     autoRotate?: boolean;
     cameraControls?: boolean;
     shadowIntensity?: number;
