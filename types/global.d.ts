@@ -2,6 +2,7 @@ declare module '@google/model-viewer' {
   type ModelViewer = {
     src: string;
     iosSrc?: string;
+    children?: React.ReactNode
     class?: string;
     ar?: boolean;
     "ar-scale"?: string;
