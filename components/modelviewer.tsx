@@ -3,10 +3,10 @@ import "@google/model-viewer";
 const Model = () => (
     <div id="card">
         <model-viewer
-            src="https://nftstorage.link/ipfs/bafybeidtdgvrv6raa2stm6wkns7y7r3srcvtwyidw2a4kvatiwkp5tz77a/piggy.glb"
+            src="https://nftstorage.link/ipfs/bafybeib2vplq3jnytmh54fyva5ou45c367kbmyebsqc5ri6wg7aynphdci/biggiepiggy.glb"
             ios-src=""
-            poster="https://cdn.glitch.com/36cb8393-65c6-408d-a538-055ada20431b%2Fposter-astronaut.png?v=1599079951717"
-            alt="A 3D model of an astronaut"
+            poster="/piggybank.png"
+            alt="A 3D model of a piggy bank"
             shadow-intensity="1"
             camera-controls
             auto-rotate
