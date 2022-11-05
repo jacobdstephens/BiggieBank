@@ -2,7 +2,6 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import dynamic from 'next/dynamic'
-import { Suspense } from 'react';
 
 const DynamicModel = dynamic(() => import('../components/modelviewer'), {
   ssr: false,
