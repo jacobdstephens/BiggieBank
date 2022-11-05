@@ -22,7 +22,6 @@ export default function Home() {
         </h1>
         <main className={styles.main}>
           <div className="card w-96 bg-base-100 shadow-xl">
-            <figure><img src="/piggybank.png" alt="PiggyBank" /></figure>
             <div className="card-body">
               <h2 className="card-title">Connect your Web3 Wallet</h2>
               <p>Feed the piggy and watch him grow!</p>
