@@ -12,6 +12,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.container}>
+        <h1 className="text-3xl font-bold">
+          BiggieBank
+        </h1>
         <main className={styles.main}>
           <ConnectButton />
         </main>
