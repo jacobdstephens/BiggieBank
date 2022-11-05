@@ -1,7 +1,12 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import Model from '../components/modelviewer'
+import dynamic from 'next/dynamic'
+import { Suspense } from 'react';
+
+const DynamicModel = dynamic(() => import('../components/modelviewer'), {
+  suspense: true,
+});
 
 export default function Home() {
   return (
@@ -21,7 +26,9 @@ export default function Home() {
             <div className="card-body">
               <h2 className="card-title">Connect your Web3 Wallet</h2>
               <p>Feed the piggy and watch him grow!</p>
-              <Model/>
+              <Suspense>
+                <DynamicModel />
+              </Suspense>
               <div className="card-actions justify-end">
                 <ConnectButton />
               </div>

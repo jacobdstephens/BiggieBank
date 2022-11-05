@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ModelViewerElement } from '@google/model-viewer';
+import type { ModelViewerElement } from '@google/model-viewer';
 
 declare global {
   namespace JSX {
