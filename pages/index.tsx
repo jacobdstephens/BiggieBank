@@ -25,7 +25,7 @@ export default function Home() {
           BiggieBank
         </h1>
         <main>
-          <div className="card h-96 bg-base-100 shadow-xl">
+          <div className="card h-96 w-full bg-base-100 shadow-xl">
             <div className="card-body">
               {isMounted && (
                 address ? (
