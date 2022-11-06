@@ -16,6 +16,7 @@ declare module '@google/model-viewer' {
     autoplay?: boolean;
     poster?: string;
     scale?: string;
+    "max-field-of-view"?: string;
   };
 
   global {
