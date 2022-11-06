@@ -17,7 +17,6 @@ export default function Home() {
   const { address } = useAccount();
   const isMounted = useIsMounted();
   const { data: signer } = useSigner();
-  const { chain } = useNetwork();
   const provider = useProvider();
   const contract = useContract({
     address: NFT_CONTRACT_ADDRESS,
@@ -25,6 +24,7 @@ export default function Home() {
     signerOrProvider: signer || provider,
   })
   const [tokenBalance, setTokenBalance] = useState(0)
+  const [tokenMetadata, setTokenMetadata] = useState(null);
   const [loading, setLoading] = useState(false)
 
   async function mintPiggy() {
@@ -48,18 +48,36 @@ export default function Home() {
       setLoading(false);
     } catch(err) {
       console.log('error minting piggy', err)
+      setLoading(false);
       return;
     }
 
     await updateBalance()
+    await updateMetadata()
   }
 
   async function updateBalance() {
-    if (!address) return
-    const balance = await contract?.balanceOf(address)
-    console.log('current balance',  BigNumber.from(balance).toNumber());
+    if (!address || !contract) return
+    const balance = await contract.balanceOf(address)
+    const balanceNumber = BigNumber.from(balance).toNumber()
 
-    setTokenBalance(BigNumber.from(balance).toNumber())
+    setTokenBalance(balanceNumber)
+
+    return balanceNumber;
+  }
+
+  async function updateMetadata() {
+    if (!contract || !address) return;
+    const tokenId = await contract.tokenOfOwnerByIndex(address, 0);
+
+    if (!tokenId) return;
+
+    const metadataResponse = await contract.getTokenURI(tokenId.toNumber())
+    const metadataStr = atob(metadataResponse.split(',')[1])
+    const metadata = JSON.parse(metadataStr);
+
+    console.log('metadata', metadata)
+    setTokenMetadata(metadata);
   }
 
   function handleMint() {
@@ -70,7 +88,11 @@ export default function Home() {
     if (contract && address) {
       const getToken = async () => {
         try {
-          await updateBalance();
+          const balance = await updateBalance();
+
+          if (balance && balance > 0) {
+            updateMetadata()
+          }
         } catch(e) {
           console.log(e)
         }
@@ -100,11 +122,11 @@ export default function Home() {
               {isMounted && (
                 address ? (
                   <>
-                    {tokenBalance === 0
+                    {tokenBalance > 0
                       ? (
                         <>
                           <div>Feed the piggy and watch him grow!</div>
-                          <DynamicModel />
+                          {tokenMetadata && <DynamicModel metadata={tokenMetadata} />}
                         </>
                       )
                       : (
@@ -124,8 +146,6 @@ export default function Home() {
                       {({
                         account,
                         chain,
-                        openAccountModal,
-                        openChainModal,
                         openConnectModal,
                         mounted,
                       }) => {
