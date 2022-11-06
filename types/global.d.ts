@@ -15,6 +15,7 @@ declare module '@google/model-viewer' {
     alt?: string;
     autoplay?: boolean;
     poster?: string;
+    scale?: string;
   };
 
   global {

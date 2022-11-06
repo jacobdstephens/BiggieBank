@@ -25,23 +25,25 @@ export default function Home() {
           BiggieBank
         </h1>
         <main>
-          <div className="card h-96 w-full bg-base-100 shadow-xl">
+          <div className="card h-screen bg-base-100">
             <div className="card-body">
-              {isMounted && (
-                address ? (
-                  <>
-                    <p>Feed the piggy and watch him grow!</p>
-                    <DynamicModel />
-                  </>
-                ) : (
-                  <>
-                    <h2 className="card-title">Connect your Web3 Wallet</h2>
-                  </>
-                )
-              )}
-              <div className="card-actions justify-end">
-                <ConnectButton />
-              </div>
+              
+                <div className="card-actions justify-end">
+                  <ConnectButton />
+                </div>
+                {isMounted && (
+                  address ? (
+                    <>
+                      <p>Feed the piggy and watch him grow!</p>
+                      <DynamicModel />
+                    </>
+                  ) : (
+                    <>
+                      <h2 className="card-title">Connect your Web3 Wallet</h2>
+                    </>
+                  )
+                )}
+              
             </div>
           </div>
         </main>
