@@ -18,7 +18,7 @@ const Model = ({ metadata }: { metadata: any }) => {
   return (
     <model-viewer class="w-full h-full"
       src={metadata.animation_url}
-      ios-src=""
+      ios-src="/piggy.usdz"
       poster={metadata.image}
       alt="A 3D model of a piggy bank"
       shadow-intensity="1"
