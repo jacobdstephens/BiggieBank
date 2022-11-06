@@ -2,8 +2,12 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import dynamic from 'next/dynamic'
-import { useAccount } from 'wagmi';
+import { useAccount, useContract, useNetwork, useProvider, useSendTransaction, useSigner } from 'wagmi';
 import useIsMounted from '../hooks/useIsMounted';
+import { NFT_CONTRACT_ADDRESS } from '../constants/contracts';
+import { useEffect, useState } from 'react';
+import { BigNumber } from 'ethers';
+import BiggyBankABI from '../abis/BiggieBank.json';
 
 const DynamicModel = dynamic(() => import('../components/modelviewer'), {
   ssr: false,
@@ -12,6 +16,69 @@ const DynamicModel = dynamic(() => import('../components/modelviewer'), {
 export default function Home() {
   const { address } = useAccount();
   const isMounted = useIsMounted();
+  const { data: signer } = useSigner();
+  const { chain } = useNetwork();
+  const provider = useProvider();
+  const contract = useContract({
+    address: NFT_CONTRACT_ADDRESS,
+    abi: BiggyBankABI.abi,
+    signerOrProvider: signer || provider,
+  })
+  const [tokenBalance, setTokenBalance] = useState(0)
+  const [loading, setLoading] = useState(false)
+
+  async function mintPiggy() {
+    try {
+      const nonce = await signer?.getTransactionCount();
+      const tx = {
+        from: address,
+        to: NFT_CONTRACT_ADDRESS,
+        nonce: nonce,
+        gasLimit: 150000,
+        'value': BigNumber.from(0).toHexString(),
+        'data': contract?.interface.encodeFunctionData('mint', [1, address]),
+      };
+
+      setLoading(true);
+      const request = await signer?.sendTransaction(tx)
+      console.log('send transaction to pool', request);
+      const finished = await request?.wait(3);
+
+      console.log('finished tx', finished);
+      setLoading(false);
+    } catch(err) {
+      console.log('error minting piggy', err)
+      return;
+    }
+
+    await updateBalance()
+  }
+
+  async function updateBalance() {
+    if (!address) return
+    const balance = await contract?.balanceOf(address)
+    console.log('current balance',  BigNumber.from(balance).toNumber());
+
+    setTokenBalance(BigNumber.from(balance).toNumber())
+  }
+
+  function handleMint() {
+    mintPiggy();
+  }
+
+  useEffect(() => {
+    if (contract && address) {
+      const getToken = async () => {
+        try {
+          await updateBalance();
+        } catch(e) {
+          console.log(e)
+        }
+      };
+
+      getToken();
+    }
+  }, [contract, address])
 
   return (
     <>
@@ -21,29 +88,67 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.container}>
-        <h1 className="text-3xl font-bold">
-          BiggieBank
-        </h1>
+        <header className="flex justify-between px-1 py-4">
+          <h1 className="text-3xl font-bold">
+            BiggieBank
+          </h1>
+          <ConnectButton />
+        </header>
         <main>
           <div className="card h-screen bg-base-100">
             <div className="card-body">
-              
-                <div className="card-actions justify-end">
-                  <ConnectButton />
-                </div>
-                {isMounted && (
-                  address ? (
-                    <>
-                      <p>Feed the piggy and watch him grow!</p>
-                      <DynamicModel />
-                    </>
-                  ) : (
-                    <>
-                      <h2 className="card-title">Connect your Web3 Wallet</h2>
-                    </>
-                  )
-                )}
-              
+              {isMounted && (
+                address ? (
+                  <>
+                    {tokenBalance === 0
+                      ? (
+                        <>
+                          <div>Feed the piggy and watch him grow!</div>
+                          <DynamicModel />
+                        </>
+                      )
+                      : (
+                        <>
+                          <div>Mint your piggy on polygon testnet</div>
+                          <button className="btn w-fit" onClick={handleMint} disabled={loading} type="button">
+                            {loading ? '...minting' : 'Mint a piggy'}
+                          </button>
+                        </>
+                      )
+                    }
+                  </>
+                ) : (
+                  <>
+                    <h2 className="card-title">Connect your Web3 Wallet</h2>
+                    <ConnectButton.Custom>
+                      {({
+                        account,
+                        chain,
+                        openAccountModal,
+                        openChainModal,
+                        openConnectModal,
+                        mounted,
+                      }) => {
+                        const ready = mounted;
+                        const connected =
+                          ready &&
+                          account &&
+                          chain;
+
+                        if (!mounted) return null;
+
+                        if (!connected) {
+                          return (
+                            <button className="btn w-fit" onClick={openConnectModal} type="button">
+                              Connect Wallet
+                            </button>
+                          );
+                        }
+                      }}
+                    </ConnectButton.Custom>
+                  </>
+                )
+              )}
             </div>
           </div>
         </main>
