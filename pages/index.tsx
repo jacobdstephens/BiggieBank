@@ -24,8 +24,8 @@ export default function Home() {
         <h1 className="text-3xl font-bold">
           BiggieBank
         </h1>
-        <main className={styles.main}>
-          <div className="card w-96 bg-base-100 shadow-xl">
+        <main>
+          <div className="card lg:card-side bg-base-100 shadow-xl">
             <div className="card-body">
               {isMounted && (
                 address ? (

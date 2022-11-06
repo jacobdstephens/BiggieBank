@@ -1,8 +1,8 @@
 import "@google/model-viewer";
 
 const Model = () => (
-    <div id="card">
-        <model-viewer
+   
+        <model-viewer class="w-full"
             src="https://nftstorage.link/ipfs/bafybeib2vplq3jnytmh54fyva5ou45c367kbmyebsqc5ri6wg7aynphdci/biggiepiggy.glb"
             ios-src=""
             poster="/piggybank.png"
@@ -18,9 +18,9 @@ const Model = () => (
             <button type="submit" className="btn btn-primary">
                 <div className="HotspotAnnotation">Oink Boink</div>
             </button>
-            </form>
-        </model-viewer>
-    </div>
+        </form>
+    </model-viewer>
+
 );
 
 export default Model;
